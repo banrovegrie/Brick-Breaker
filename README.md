@@ -1,2 +1,4 @@
 # Brick-Breaker
-a Terminal Game
+
+## What is to be done?
+- [] dwdw
