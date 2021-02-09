@@ -1,4 +1,3 @@
 # Brick-Breaker
 
-## What is to be done?
-- [] dwdw
+This game is a terminal based python game.
