@@ -55,5 +55,3 @@ class Render:
         out = [" " * margin['cols'] + "".join(str) for str in frame]       # array of strings
         out = "\n".join(out)                                               # string
         print(out, flush=True)
-
-    
