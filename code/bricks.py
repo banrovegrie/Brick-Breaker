@@ -1,6 +1,7 @@
 import copy, sys, time, os, math, subprocess as sp
 import colorama as color, numpy as np, random
 from colorama import Fore, Back, Style
+from numpy.core.defchararray import center
 
 debug_file = open("debug.log", "w")
 debug_file.close()
@@ -13,7 +14,9 @@ class Bricks:
     def render(self, screen):
         for i in range(self.begin['x'], self.end['x']):
             for j in range(self.begin['y'], self.end['y']):
-                if self.frame[i][j] == 1:
+                if self.frame[i][j] == 0:
+                    screen.frame[i][j] = self.pixel(' ') 
+                elif self.frame[i][j] == 1:
                     screen.frame[i][j] = self.pixel('█', Fore.MAGENTA)
                 elif self.frame[i][j] == 2:
                     screen.frame[i][j] = self.pixel('█', Fore.CYAN)
@@ -27,21 +30,24 @@ class Bricks:
     def fill(self, screen):
         for i in range(self.begin['x'], self.end['x']):
             if i == self.golden[0]['x']:
-                for j in range(self.begin['y']+10,self.begin['y']+60):
+                for j in range(self.begin['y']+10, min(self.begin['y']+60, self.end['y'])):
                     self.frame[i][j] = 4
             elif i == self.golden[1]['x']:
-                for j in range(self.begin['y']+10,self.begin['y']+60):
+                for j in range(self.begin['y']+15, min(self.begin['y']+65, self.end['y'])):
                     self.frame[i][j] = 4
             else:
                 for j in range(self.begin['y'], self.end['y'], 5):
+                    center = int(j + 2)
                     if random.choice(self.prob):
                         option = random.choice(self.options)
                         for k in range(j, j+5):
                             self.frame[i][k] = option
+                            self.center[i][k] = center
 
     def __init__(self, screen):
         self.frame = np.zeros((screen.rows, screen.cols))
-        self.prob = [0, 0, 0, 1]
+        self.center = np.zeros((screen.rows, screen.cols))
+        self.prob = [0, 0, 0, 1]                     # set probabilities
         self.options = [1, 1, 2, 2, 3, 3, 5]         # 0 = no brick, 4 = golden, 5 = unbreakable
         self.begin = {
             'x': int(screen.rows * 0.2),

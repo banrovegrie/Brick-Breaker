@@ -41,26 +41,68 @@ class Ball:
         else: 
             self.motion['y'] = 0
 
-    def collision(self, screen, player):
+    def golden_collision(self, bricks, i):
+        for j in range(bricks.begin['y'], bricks.end['y']):
+            if bricks.frame[i][j] == 4:
+                bricks.frame[i+1][j] = 0
+                bricks.frame[i-1][j] = 0
+                bricks.frame[i][j-1] = 0
+                bricks.frame[i][j] = 0
+
+
+    def collision(self, screen, player, bricks, bar):
         # Obstacle is present below
-        if screen.frame[self.x+1][self.y] != self.pixel(' '):
+        if screen.frame[self.x+1][self.y] != self.pixel(' ') and self.motion['x'] > 0:
             if screen.frame[self.x+1][self.y] == self.pixel('▬'):
                 self.paddle_collision(screen, player)
             else:
+                if bricks.frame[self.x+1][self.y] in [1, 2, 3]:
+                    for j in range(int(bricks.center[self.x+1][self.y]-2), int(bricks.center[self.x+1][self.y]+3)):
+                        bricks.frame[self.x+1][j] -= 1
+                        bar.score += 1
+                elif bricks.frame[self.x+1][self.y] == 4:
+                    self.golden_collision(bricks, self.x+1)
+                    bar.score += 50
+                elif screen.frame[self.x+1][self.y] == self.pixel('_'):
+                    bar.lives -= 1
                 self.motion['x'] = -self.motion['x']
+
         # Obstacle is present above
-        if screen.frame[self.x-1][self.y] != self.pixel(' '):
+        if screen.frame[self.x-1][self.y] != self.pixel(' ') and self.motion['x'] < 0:
+            if bricks.frame[self.x-1][self.y] in [1, 2, 3]:
+                for j in range(int(bricks.center[self.x-1][self.y]-2), int(bricks.center[self.x-1][self.y]+3)):
+                    bricks.frame[self.x-1][j] -= 1
+                    bar.score += 1
+            elif bricks.frame[self.x-1][self.y] == 4:
+                self.golden_collision(bricks, self.x-1)
+                bar.score += 50
             self.motion['x'] = -self.motion['x']
+
         # Obstacle is present to the right
-        if screen.frame[self.x][self.y+1] != self.pixel(' '):
-            self.motion['y'] = -self.motion['y']
-        # Obstacle is present to the left
-        if screen.frame[self.x][self.y-1] != self.pixel(' '):
+        if screen.frame[self.x][self.y+1] != self.pixel(' ') and self.motion['y'] > 0:
+            if bricks.frame[self.x][self.y+1] in [1, 2, 3]:
+                for j in range(int(bricks.center[self.x][self.y+1]-2), int(bricks.center[self.x][self.y+1]+3)):
+                    bricks.frame[self.x][j] -= 1
+                    bar.score += 1
+            elif bricks.frame[self.x][self.y+1] == 4:
+                self.golden_collision(bricks, self.x)
+                bar.score += 50
             self.motion['y'] = -self.motion['y']
 
-    def movement(self, screen, player):
+        # Obstacle is present to the left
+        if screen.frame[self.x][self.y-1] != self.pixel(' ') and self.motion['y'] < 0:
+            if bricks.frame[self.x][self.y-1] in [1, 2, 3]:
+                for j in range(int(bricks.center[self.x][self.y-1]-2), int(bricks.center[self.x][self.y-1]+3)):
+                    bricks.frame[self.x][j] -= 1
+                    bar.score += 1
+            elif bricks.frame[self.x][self.y-1] == 4:
+                self.golden_collision(bricks, self.x)
+                bar.score += 50
+            self.motion['y'] = -self.motion['y']
+
+    def movement(self, screen, player, bricks, bar):
         # Check collision
-        self.collision(screen, player)
+        self.collision(screen, player, bricks, bar)
         # Copy position for reference
         self.prev['x'] = self.x
         self.prev['y'] = self.y
