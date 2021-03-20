@@ -14,7 +14,17 @@ class Bricks:
     def render(self, screen):
         for i in range(self.begin['x'], self.end['x']):
             for j in range(self.begin['y'], self.end['y']):
-                if self.frame[i][j] == 0:
+                if self.rainbow[i][j] == 1:
+                    option = random.choice([1, 2, 3])
+                    for j in range(int(self.center[i][j]-2), int(self.center[i][j]+3)):
+                        self.frame[i][j] = option
+                        if self.frame[i][j] == 1:
+                            screen.frame[i][j] = self.pixel('█', Fore.MAGENTA)
+                        elif self.frame[i][j] == 2:
+                            screen.frame[i][j] = self.pixel('█', Fore.CYAN)
+                        elif self.frame[i][j] == 3:
+                            screen.frame[i][j] = self.pixel('█', Fore.BLUE)
+                elif self.frame[i][j] == 0:
                     screen.frame[i][j] = self.pixel(' ') 
                 elif self.frame[i][j] == 1:
                     screen.frame[i][j] = self.pixel('█', Fore.MAGENTA)
@@ -40,15 +50,19 @@ class Bricks:
                     center = int(j + 2)
                     if random.choice(self.prob):
                         option = random.choice(self.options)
+                        isRainbow = random.choice(self.rainbowProb)
                         for k in range(j, j+5):
                             self.frame[i][k] = option
                             self.center[i][k] = center
+                            self.rainbow[i][k] = isRainbow
 
     def __init__(self, screen):
         self.frame = np.zeros((screen.rows, screen.cols))
         self.center = np.zeros((screen.rows, screen.cols))
         self.prob = [0, 0, 0, 1]                     # set probabilities
         self.options = [1, 1, 2, 2, 3, 3, 5]         # 0 = no brick, 4 = golden, 5 = unbreakable
+        self.rainbow = np.zeros((screen.rows, screen.cols))
+        self.rainbowProb = [0, 0, 0, 1]
         self.begin = {
             'x': int(screen.rows * 0.2),
             'y': int(screen.cols * 0.15)

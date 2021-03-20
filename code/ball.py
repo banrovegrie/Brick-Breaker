@@ -58,6 +58,7 @@ class Ball:
             else:
                 if bricks.frame[self.x+1][self.y] in [1, 2, 3]:
                     for j in range(int(bricks.center[self.x+1][self.y]-2), int(bricks.center[self.x+1][self.y]+3)):
+                        bricks.rainbow[self.x+1][j] = 0
                         bricks.frame[self.x+1][j] -= 1
                         bar.score += 1
                 elif bricks.frame[self.x+1][self.y] == 4:
@@ -71,6 +72,7 @@ class Ball:
         if screen.frame[self.x-1][self.y] != self.pixel(' ') and self.motion['x'] < 0:
             if bricks.frame[self.x-1][self.y] in [1, 2, 3]:
                 for j in range(int(bricks.center[self.x-1][self.y]-2), int(bricks.center[self.x-1][self.y]+3)):
+                    bricks.rainbow[self.x-1][j] = 0
                     bricks.frame[self.x-1][j] -= 1
                     bar.score += 1
             elif bricks.frame[self.x-1][self.y] == 4:
@@ -82,6 +84,7 @@ class Ball:
         if screen.frame[self.x][self.y+1] != self.pixel(' ') and self.motion['y'] > 0:
             if bricks.frame[self.x][self.y+1] in [1, 2, 3]:
                 for j in range(int(bricks.center[self.x][self.y+1]-2), int(bricks.center[self.x][self.y+1]+3)):
+                    bricks.rainbow[self.x][j] = 0
                     bricks.frame[self.x][j] -= 1
                     bar.score += 1
             elif bricks.frame[self.x][self.y+1] == 4:
@@ -93,6 +96,7 @@ class Ball:
         if screen.frame[self.x][self.y-1] != self.pixel(' ') and self.motion['y'] < 0:
             if bricks.frame[self.x][self.y-1] in [1, 2, 3]:
                 for j in range(int(bricks.center[self.x][self.y-1]-2), int(bricks.center[self.x][self.y-1]+3)):
+                    bricks.rainbow[self.x][j] = 0
                     bricks.frame[self.x][j] -= 1
                     bar.score += 1
             elif bricks.frame[self.x][self.y-1] == 4:
