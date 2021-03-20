@@ -10,7 +10,7 @@ class Top:
     def __init__(self, screen):
         self.begin = {
             1: 1, 
-            2: screen.cols//2,
+            2: screen.cols//2 - 10,
             3: screen.cols - 15 
         }
         self.row = 1
@@ -34,6 +34,11 @@ class Bar(Top):
         screen.frame[self.row][self.begin[2]] = self.pixel('♥', Fore.RED)
         screen.frame[self.row][self.begin[2]+2] = self.pixel('✗')
         screen.frame[self.row][self.begin[2]+4] = Back.BLACK + str(self.lives) + Style.RESET_ALL
+        screen.frame[self.row][self.begin[2]+13] = self.pixel('L')
+        screen.frame[self.row][self.begin[2]+14] = self.pixel('v')
+        screen.frame[self.row][self.begin[2]+15] = self.pixel('l')
+        screen.frame[self.row][self.begin[2]+16] = self.pixel(':')
+        screen.frame[self.row][self.begin[2]+18] = self.pixel(str(self.level))
 
         self.time = int(time.time() - self.start_time)
         screen.frame[self.row][self.begin[3]] = self.pixel('T')
@@ -49,5 +54,6 @@ class Bar(Top):
         super().__init__(screen)
         self.score = 0
         self.lives = 9
+        self.level = 1
         self.start_time = time.time()
         self.render(screen)
